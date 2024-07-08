@@ -1,0 +1,46 @@
+name: Build Zed (Automatically Release)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        repository: zed-industries/zed
+
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+
+    - name: Add WASM target
+      run: rustup target add wasm32-wasi
+
+    - name: Install C++ build tools
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: x64
+        
+    - name: Rust Cache
+      uses: Swatinem/rust-cache@v2
+
+    - name: Run cargo
+      run: cargo build --release
+
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: zed
+        path: target\release\Zed.exe
+        
+    - name: Create and publish release
+      uses: ncipollo/release-action@v1.13.0
+      with:
+        name: Zed-Windows
+        allowUpdates: true
+        commit: master
+        replacesArtifacts: true
+        token: ${{ secrets.GITHUB_TOKEN }}
+        artifacts: target\release\Zed.exe

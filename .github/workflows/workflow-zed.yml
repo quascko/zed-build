@@ -1,4 +1,4 @@
-name: Build Zed
+name: Build Zed (GitHub Artifact Deployment)
 
 on:
   workflow_dispatch:
