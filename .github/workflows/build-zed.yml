@@ -1,9 +1,9 @@
-name: Build Zed
+name: Build Zed (Weekly)
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 2 * * *"
+    - cron: "0 4 * * 1"
 
 permissions: 
   contents: write
@@ -71,7 +71,7 @@ jobs:
       if: startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/auto-release')
       with:
         name: Nightly ${{ steps.set-date.outputs.CURRENT_DATE }}
-        body: Automated nightly release of Zed
+        body: Automated weekly nightly release of Zed
         tag_name: "nightly-${{ steps.set-date.outputs.CURRENT_DATE }}"
         prerelease: true
         files: |
